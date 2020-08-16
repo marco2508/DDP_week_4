@@ -1,0 +1,96 @@
+---
+title: "Week 4 developing data product"
+author: "Marco Lamers"
+date: "16-8-2020"
+output: ioslides_presentation
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library( shiny )
+```
+
+## Shiny Presentation
+- Have my doubts on the exact tasks that are asked for week 4 assignments.
+I created a server.R and UI.R that displayed three different types of interactions in one page.
+Not so very Nice but Ok. 
+- Now I am embedding that code in an R markdown. Again not so very nice.
+- Then they are asking about providing proper documentation.
+Are we expected to create it like a package?
+For now I expect not to.
+- I learned a lot with practicing these steps whatsoever
+- now asking for RStudio Connect usage; again my doubts. I will use RPubs for the app.
+
+## Old Faithful separated; template based
+
+```{r eruptions}
+inputPanel(
+            h3( "Show HTML understanding"),
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30
+                        )
+  )
+#adding the ({ after renderplot makes the special marker visible })
+renderPlot({
+        x    <- faithful[, 2]
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = 'darkgreen', border = 'white' )
+})
+```
+
+## Random points example
+Some more experiments for controlling the layout.
+In fact amazingly simple.
+
+
+```{r try 2}
+    sidebarLayout(
+        sidebarPanel(
+            h4( "- Points thing"),
+            numericInput( "numeric", "how many numbers to be plotted?", 
+                          value = 100, min=1, max=500, step = 1 ),
+            sliderInput( "sliderX", "pick minium and maximum X values", 
+                         -100, 100, value = c(-50,50)),
+            sliderInput( "sliderY", "pick minium and maximum Y values", 
+                         -100, 100, value = c(-50,50)),
+        ),
+
+        # Show a plot of the generated distribution 
+        mainPanel(
+            h4( "Second: some random points"),
+renderPlot({
+        set.seed( 2020-08-16)
+        number_of_points <- input$numeric
+        minX <- input$sliderX[1]
+        maxX <- input$sliderX[2]
+        minY <- input$sliderY[1]
+        maxY <- input$sliderY[2]
+        
+        dataX <- runif( number_of_points, minX, maxX)
+        dataY <- runif( number_of_points, minY, maxY)
+        
+        title = "week 4 part 1"
+        renderText( number_of_points )
+        
+        plot( dataX, dataY, xlab = "X axis", ylab = "Y axis", main = title,
+              xlim=c(-100,100),ylim=c(-100,100))
+    })
+        )
+    )
+
+    
+```
+
+## R Output; just an output table for Shiny
+
+```{r Iris}
+  renderTable({iris })
+```
+
+
